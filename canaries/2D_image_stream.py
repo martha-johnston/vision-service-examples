@@ -16,10 +16,10 @@ import logging
 import requests
 import os
 
-has_webhook = False
-if len(sys.argv) > 2:
-    url = sys.argv[2]
-    has_webhook = True
+# has_webhook = False
+# if len(sys.argv) > 2:
+#     url = sys.argv[2]
+#     has_webhook = True
 arg = int(sys.argv[1])
 
 screen_res = 1920, 1080
@@ -139,12 +139,14 @@ async def main():
             await task2
         else:
             logging.info("unaccepted argument")
+        
+        exit(1)
 
     except Exception as e:
         logging.info(f"caught exception '{e}'")
-        if has_webhook:
-            body = {"text": f'{e}'}
-            res = requests.post(url, json=body)
+        # if has_webhook:
+        #     body = {"text": f'{e}'}
+        #     res = requests.post(url, json=body)
         await close_robot(robot)
         logging.info("exiting with status 1")
         exit(1)
@@ -152,7 +154,7 @@ async def main():
 
 if __name__ == '__main__':
     logging.basicConfig(
-        filename='/tmp/canary_logs.txt',
+        filename='/tmp/logs.txt',
         encoding='utf-8',
         level=logging.INFO,
         filemode='w',

@@ -49,17 +49,18 @@ do
 
   echo "displaying xterm window..."
   statusfile=$(mktemp)
-  DISPLAY=:0 xterm -e "python3 $CV/canaries/2D_image_stream.py $1 $2; echo \$? > $statusfile"
+  DISPLAY=:0 xterm -e "python3 $CV/canaries/2D_image_stream.py $1; echo \$? > $statusfile"
   status=$(cat "$statusfile")
   rm $statusfile
 
   if [ "$status" = 0 ]; then
-    echo "success"
+    # curl -X POST -H 'Content-type: application/json' --data '{"text": "success"}' $URL
     exit
   fi
-
+  echo "trying again"
   attempt=$((attempt+1))
 done
 
-echo "failure"
+echo "failure" << /tmp/logs.txt
+curl -X POST -H 'Content-type: application/json' --data-binary "@/tmp/logs.txt" $URL
 exit 1
